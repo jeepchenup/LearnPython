@@ -294,6 +294,7 @@ def calc(*numbers):
     return sum
 print(calc(1,2))
 
+# 关键字参数，**kw
 def person(name, age, **kw):
     print('name:', name, "age:", age, "other:", kw)
 
@@ -304,6 +305,30 @@ person('Adam', 45, gender='M', job='Engineer')
 extra = {'city':'Beijing', 'job':'Engineer'}
 person('Jack', 24, city=extra['city'], job=extra['job'])
 person('Jack', 24, **extra)
+
+# 限制关键字参数 ,*后面跟着的就是限制关键字参数
+# 后面的关键字参数是必须得传的
+def person(name, age, *, city, job):
+    print(name, age, city, job)
+
+# person('Jack', 24, city='Hangzhou') //报error
+person('Jack', 24, city='Beijing', job='Engineer')
+
+# 如果函数定义中已经有了一个可变参数，后面跟着的命名关键字参数就不再需要一个特殊分隔符*了
+def person(name, age, *args, city, job):
+    print(name, age, args, city, job)
+
+# 参数组合
+def f1(a, b, c=0, *args, **kw):
+    print('a =', a, 'b =', b, 'c =', c, 'args =', args, 'kw =', kw)
+def f2(a, b, c=0, *, d, **kw):
+    print('a =', a, 'b =', b, 'c =', c, 'd =', d, 'kw =', kw)
+
+f1(1,2)                     # a=1,b=2,c=0,args=(),kw={}
+f1(1,2,c=3)                 # a=1,b=2,c=3,args=(),kw={}
+f1(1,2,3,'a','c')           # a=1,b=3,c=3,args=('a','c'),kw={}
+f1(1, 2, 3, 'a', 'b', x=99) # a=1,b=3,c=3,args=('a','c'),kw={'x'=99}
+f2(1,2,d=99,ext=None)       # a=1,b=2,c=0,d=99,kw={'ext'=None}
 
 # 练习
 def product(*args):
