@@ -135,3 +135,102 @@ if L2 == ['hello', 'world', 'apple']:
     print('测试通过!')
 else:
     print('测试失败!')
+
+# 高级特性 - 生成器
+# 生成器的存在就是为了防止内存溢出
+g = (x * x for x in range(10))
+print(isinstance(g, Iterable))
+
+# 迭代生成器
+for n in g:
+    print(n)
+
+# 斐波拉契数列
+def fib(max):
+    n, a, b = 0,0,1
+    while n < max:
+        print(b)
+        a, b = b, a+b # 赋值语句
+        n = n+1
+    return 'done'
+fib(6)
+
+# 如果一个函数定义中包含yield关键字，那么这个函数就不再是一个普通函数，而是一个generator
+def fib(max):
+    n, a, b = 0, 0, 1
+    while n < max:
+        yield b
+        a,b = b,a+b
+        n = n+1
+    return 'done'
+for n in fib(6):
+    print(n) # 这样是捕获不到return语句返回的'done'
+
+# 修改成下面的写法
+def readGenerator(g):
+    while True:
+        try:
+            x = next(g)
+            print('g:', x)
+        except StopIteration as e:
+            print('Generator return value:', e.value)
+            break
+readGenerator(fib(6))
+
+# 练习 - 打印出杨辉三角
+def triangles():
+    n = 0
+    M = [1]
+    L = [1]
+    while True:
+        yield(L)
+        n += 1
+        if n == 1:
+            L = [1,1]
+        elif n>=2:
+            L = [1]
+            for i in range(1,n):
+                L.append(M[i-1] + M[i])
+            L.append(1)
+        M = L
+
+# 测试
+n = 0
+results = []
+for t in triangles():
+    print(t)
+    results.append(t)
+    n = n + 1
+    if n == 10:
+        break
+if results == [
+    [1],
+    [1, 1],
+    [1, 2, 1],
+    [1, 3, 3, 1],
+    [1, 4, 6, 4, 1],
+    [1, 5, 10, 10, 5, 1],
+    [1, 6, 15, 20, 15, 6, 1],
+    [1, 7, 21, 35, 35, 21, 7, 1],
+    [1, 8, 28, 56, 70, 56, 28, 8, 1],
+    [1, 9, 36, 84, 126, 126, 84, 36, 9, 1]
+]:
+    print('测试通过!')
+else:
+    print('测试失败!')
+
+# 高级特性 - 迭代器
+# 可以被next()函数调用并不断返回下一个值的对象被称为迭代器: Iterator
+# 可以通过isinstance()判断一个对象是否是Iterator对象
+# 生成器都是Iterator对象
+# list、dict、str虽然是可迭代的，但是不是Iterator对象
+
+from collections import Iterator
+print(isinstance([], Iterator)) # list
+print(isinstance({}, Iterator)) # dict
+print(isinstance('ABC', Iterator)) # str
+
+# 可以通过iter()函数将list、dict、str等可被迭代的对象转换成Iterator对象
+print(isinstance(iter([]), Iterator))
+print(isinstance(iter({}), Iterator))
+print(isinstance(iter('ABC'), Iterator))
