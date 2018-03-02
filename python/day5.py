@@ -230,3 +230,76 @@ class Chain(object):
     __repr__ = __str__
 
 print(Chain().status.user.timeline.list)
+
+# __call__
+# 一个对象可以有自己的属性和方法
+class Student(object):
+    def __init__(self, name):
+        self.name = name
+    
+    def __call__(self):
+        return ('My name is %s' % self.name)
+
+s = Student('steven')
+print(s())
+
+# callable() 可以判断对象或者函数是否可调用自身
+print(callable(Student('name')))
+print(callable(max))
+print(callable([1,2,3]))
+
+# 面向对象高级编程 - 使用枚举类
+from enum import Enum 
+Month = Enum('Month', ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+print(Month.Jan)
+for name, member in Month.__members__.items():
+    print(name, '=>', member, ',', member.value)
+
+from enum import Enum, unique
+
+# Enum 默认从1开始计数，可以通过继承Enum来自定义
+# @unique可以帮助我们检查保证没有重复值
+from enum import Enum, unique
+@unique
+class Weekday(Enum):
+    Sun = 0 # Sun的value被设定为0
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
+
+day1 = Weekday.Mon
+print(day1)
+print(day1.value)
+print(Weekday(1))
+
+# 练习 - 枚举类
+# 把Student的gender属性改造为枚举类型，可以避免使用字符串：
+
+from enum import Enum, unique
+class Gender(Enum):
+    Male = 0
+    Female = 1
+
+class Student(object):
+    def __init__(self, name, gender):
+        self.name = name
+        self.gender = gender
+
+# 测试:
+bart = Student('Bart', Gender.Male)
+if bart.gender == Gender.Male:
+    print('success')
+else:
+    print('fail')
+
+# 面向对象高级编程 - 使用元类
+# python是动态语言，这意味着函数和类的定义不是在编译时定义的，而是在运行时动态创建的
+class Hello(object):
+    def hello(self, name='word'):
+        print('Hello, %s.' % name)
+h = Hello()
+h.hello()
+print(type(Hello), type(h))
